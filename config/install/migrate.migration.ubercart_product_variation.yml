@@ -1,0 +1,39 @@
+# Ubercart 6 Product Variation Migration
+#
+# For my use case, I had to create several different product variation types 
+# and write an individual migration for each one. This is meant to be an example.
+id: d6_ubercart_product_variation
+label: Migrate product variations from Ubercart
+migration_group: ubercart
+migration_tags:
+  - Drupal 6 Ubercart
+source:
+  plugin: d6_ubercart_product_variation
+  constants:
+    currency: USD
+process:
+  type:
+    plugin: default_value
+    # 'default' is the default 'commerce_product_variation' bundle initially
+    # installed 
+    default_value: default
+  uid: uid
+  sku: model
+  'price/amount': sell_price
+  # For my use case, all products are priced in USD so I made the currency 
+  # code constant.
+  'price/currency_code': 'constants/currency'
+  status: status
+  created: created
+  changed: changed
+  # Creates a 'product_id' stub. When the product migration is run, the mapped
+  # variations are imported.
+  product_id:
+    plugin: migration
+    # I initially tried to use 'nid' as the source but doing so caused my 
+    # machine to hang so I created a new source field called 'node_id' in
+    # ProductVariation.php as a work around.
+    source: node_id
+    migration: d6_ubercart_product
+destination:
+  plugin: entity:commerce_product_variation

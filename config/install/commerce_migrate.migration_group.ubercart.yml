@@ -1,0 +1,7 @@
+id: ubercart_6
+label: Ubercart 6 Imports
+description: All Ubercart imports.
+source_type: Drupal 6 Ubercart
+shared_configuration:
+  source:
+    key: migrate

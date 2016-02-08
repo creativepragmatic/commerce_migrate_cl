@@ -1,0 +1,49 @@
+# Ubercart 6 Order Migration
+id: d6_ubercart_order
+label: Migrate orders from Ubercart
+migration_group: ubercart
+migration_tags:
+  - Drupal 6 Ubercart
+source:
+  plugin: d6_ubercart_order
+  constants:
+    store_id: 1
+process:
+  type:
+    plugin: default_value
+    default_value: default
+  order_number: order_id
+  store_id: 'constants/store_id'
+  uid: uid
+  mail: primary_email
+  billing_profile: billing_id
+  state: 
+    plugin: static_map
+    source: order_status
+    map:
+      # These are the equivalent order states I was able to gather from the 
+      # documentation.
+      in_checkout: draft
+      pending: validation
+      payment_received: fulfillment
+      completed: completed
+      canceled: canceled
+  # Order total extraction works. I'm not sure why they are not coming into
+  # the D8 Commerce. I noticed a @todo in the Order.php file and, at the time
+  # of writing, orders cannot be edited so I'll try again with a more stable
+  # version of the Commerce code base.
+  'total_price/amount': order_total
+  'total_price/currency_code': currency
+  ip_address: host
+  # My use case heavily utilizes attributes and options but neither contrib
+  # module is currently available for D8 Commerce. I will return to this after
+  # I port them.
+  #data: 
+  created: created
+  changed: modified
+  placed: modified
+destination:
+  plugin: entity:commerce_order
+migration_dependencies:
+  required:
+    - d6_ubercart_billing_profile

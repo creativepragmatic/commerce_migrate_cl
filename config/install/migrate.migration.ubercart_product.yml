@@ -1,0 +1,35 @@
+# Ubercart 6 Product Migration
+#
+# Like Product Variation migration, this is meant to be an example.
+id: d6_ubercart_product
+label: Migrate products from Ubercart
+migration_group: ubercart
+migration_tags:
+  - Drupal 6 Ubercart
+source:
+  plugin: d6_ubercart_product
+process:
+  type:
+    plugin: default_value
+    default_value: default
+  uid: uid
+  title: title
+  'body/value': body
+  # An example of how to import into image fields.
+  #field_product_image:
+  #  plugin: migration
+  #  migration: d6_file
+  #  source: images
+  status: status
+  created: created
+  changed: changed
+  # Fills in variation id from stubs created in product variation migration.
+  'variations/target_id':
+    plugin: migration
+    migration: d6_ubercart_product_variation
+    source: nid
+destination:
+  plugin: entity:commerce_product
+migration_dependencies:
+  required:
+    - d6_ubercart_product_variation

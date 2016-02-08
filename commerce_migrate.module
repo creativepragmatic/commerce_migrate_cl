@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains commerce_migrate.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function commerce_migrate_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the commerce_migrate module.
+    case 'help.page.commerce_migrate':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides various Commerce-specific Migrate handlers.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
