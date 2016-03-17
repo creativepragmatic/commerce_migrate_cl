@@ -61,9 +61,7 @@ The idea is to share my approach and experiences.  Hopefully, others will build 
 
         bigustebrecluspocrobrocledusecrustudanovewerouajaswamapredaspobehestocrachuwibredapawupobri
 
-I know this is caused by the stubs used in the products and product variations migrations but I'm not sure if they're being created by an issue in the migrate module or because I don't fully understand it.  When I ran Migrate Drupal, files with nonsensical names like this also appeared.
-
-I remove them with the following SQL commands:
+2. I know this is caused by the stubs used in the products and product variations migrations but I'm not sure if they're being created by an issue in the migrate module or because I don't fully understand it. I remove them with the following SQL commands:
 
         DELETE FROM `commerce_product_variation_field_data` 
           WHERE uid = 0;
@@ -88,8 +86,14 @@ I remove them with the following SQL commands:
             FROM `commerce_product_field_data`
           );
 
-2. For product variations, the title field does not get migrated in. I'm not sure why.
+3. When I ran Migrate Drupal, files with nonsensical names like this also appeared.  I removed those with the following commands:
 
-3. Order totals get zero'd out during migration because of the order total recalculation code at the end of the preSave method in Order.php. I opened an issue at: https://www.drupal.org/node/2686029
+    DELETE FROM `file_managed` WHERE `uid` != 7
+    DELETE FROM `file_usage` WHERE `type` = 'user'
+    find . -size 0c -delete
 
-4. Orders are currently being migrated before line items but I'm not sure this is the best approach.  I don't remember the 'commerce_order__line_items' table being there when I started but it populating it may require another template.
+4. For product variations, the title field does not get migrated in. I'm not sure why.
+
+5. Order totals get zero'd out during migration because of the order total recalculation code at the end of the preSave method in Order.php. I opened an issue at: https://www.drupal.org/node/2686029
+
+6. Orders are currently being migrated before line items but I'm not sure this is the best approach.  I don't remember the 'commerce_order__line_items' table being there when I started but it populating it may require another template.
