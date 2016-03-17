@@ -18,6 +18,8 @@ process:
     # installed 
     default_value: default
   uid: uid
+  # This should work 'as is'. I'm not sure why it doesn't work.
+  title: title
   sku: model
   'price/amount': sell_price
   # For my use case, all products are priced in USD so I made the currency 

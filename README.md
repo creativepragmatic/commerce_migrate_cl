@@ -55,10 +55,41 @@ The idea is to share my approach and experiences.  Hopefully, others will build 
         DELETE FROM `key_value` WHERE `key_value`.`collection` = 'migrate_last_imported' AND `key_value`.`name` = 'd6_ubercart_product';
         DELETE FROM `key_value` WHERE `key_value`.`collection` = 'migrate_status' AND `key_value`.`name` = 'd6_ubercart_product';
 
-##Issues
+##Issues and Notes
 
-Most of the issues I encountered are commented in the source files but when migrating products, a number of nonsensical products will appear equal to the number of products imported with file names similar to the following:
+1. Most of the issues I encountered are commented in the source files but when migrating products, a number of nonsensical products will appear equal to the number of products imported with file names similar to the following:
 
-    bigustebrecluspocrobrocledusecrustudanovewerouajaswamapredaspobehestocrachuwibredapawupobri
+        bigustebrecluspocrobrocledusecrustudanovewerouajaswamapredaspobehestocrachuwibredapawupobri
 
 I know this is caused by the stubs used in the products and product variations migrations but I'm not sure if they're being created by an issue in the migrate module or because I don't fully understand it.  When I ran Migrate Drupal, files with nonsensical names like this also appeared.
+
+I remove them with the following SQL commands:
+
+        DELETE FROM `commerce_product_variation_field_data` 
+          WHERE uid = 0;
+
+        DELETE FROM `commerce_product__variations` 
+          WHERE `variations_target_id` NOT IN (
+            SELECT `variation_id` 
+            FROM `commerce_product_variation_field_data`
+          );
+
+        DELETE FROM `commerce_product_variation` 
+          WHERE `variation_id` NOT IN (
+            SELECT `variation_id` 
+            FROM `commerce_product_variation_field_data`
+          );
+
+        DELETE FROM `commerce_product_field_data` WHERE `uid` = 0;
+
+        DELETE FROM `commerce_product` 
+          WHERE `product_id` NOT IN (
+            SELECT `product_id` 
+            FROM `commerce_product_field_data`
+          );
+
+2. For product variations, the title field does not get migrated in. I'm not sure why.
+
+3. Order totals get zero'd out during migration because of the order total recalculation code at the end of the preSave method in Order.php. I opened an issue at: https://www.drupal.org/node/2686029
+
+4. Orders are currently being migrated before line items but I'm not sure this is the best approach.  I don't remember the 'commerce_order__line_items' table being there when I started but it populating it may require another template.

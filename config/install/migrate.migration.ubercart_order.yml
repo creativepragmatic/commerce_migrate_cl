@@ -35,10 +35,8 @@ process:
   'total_price/amount': order_total
   'total_price/currency_code': currency
   ip_address: host
-  # My use case heavily utilizes attributes and options but neither contrib
-  # module is currently available for D8 Commerce. I will return to this after
-  # I port them.
-  #data: 
+  # Source field name 'data' changed to 'attributes' in prepareRow function
+  data: attributes
   created: created
   changed: modified
   placed: modified

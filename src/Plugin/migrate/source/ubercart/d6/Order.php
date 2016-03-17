@@ -63,7 +63,15 @@ class Order extends SqlBase {
       ->fetchCol();
     $row->setSourceProperty('billing_id', $profile[0]);
 
-    //drush_print_r(unserialize($row->getSourceProperty('data')));
+    // The Migrate API automatically serializes arrays for storage in longblob
+    // fields so we unserialize them here.
+    $attributes = unserialize($row->getSourceProperty('data'));
+
+    // Ubercart 6 stores credit card information in a hash. Since this probably
+    // isn't necessary so I removed it here.
+    unset($attributes['cc_data']);
+
+    $row->setSourceProperty('attributes', $attributes);
 
     return parent::prepareRow($row);
   }

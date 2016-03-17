@@ -16,20 +16,19 @@ process:
     plugin: migration
     migration: d6_ubercart_order
     source: order_id
-  # Pulls in product ids from order migration
+  # Pulls in product ids from product migration
   purchased_entity:
     plugin: migration
-    migration: d6_ubercart_product
-    source: nid
+    migration: d6_ubercart_product_variation
+    source: node_id
   title: title
   quantity: qty
   'unit_price/amount': price
   'unit_price/currency_code': currency
   'total_price/amount': total_price
   'total_price/currency_code': currency
-  # As with the order id data field in the orders migration, I will do this 
-  # later.
-  #data: 
+  # Source field name 'data' changed to 'attributes' in prepareRow function
+  data: attributes
   created: created
   changed: modified
 destination:

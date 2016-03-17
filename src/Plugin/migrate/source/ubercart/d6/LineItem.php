@@ -49,6 +49,24 @@ class LineItem extends SqlBase {
   /**
    * {@inheritdoc}
    */
+  public function prepareRow(Row $row) {
+
+    // The Migrate API automatically serializes arrays for storage in longblob
+    // fields so we unserialize them here.
+    $attributes = unserialize($row->getSourceProperty('data'));
+
+    // In Ubercart, the module key is set to 'uc_order' so it's removed for
+    // D8 Commerce.
+    unset($attributes['module']);
+
+    $row->setSourceProperty('attributes', $attributes);
+
+    return parent::prepareRow($row);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getIds() {
     return [
       'order_product_id' => [

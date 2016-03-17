@@ -23,7 +23,8 @@ class ProductVariation extends SqlBase {
   public function query() {
 
     $query = $this->select('node', 'n')
-      ->fields('n', array('nid', 'vid', 'type', 'uid', 'created', 'changed', 'status'));
+      ->fields('n', array('nid', 'vid', 'type', 'title', 'uid', 'created', 
+        'changed', 'status'));
     $query->innerJoin('uc_products', 'ucp', 'n.nid = ucp.nid AND n.vid = ucp.vid');
     $query->fields('ucp', array('model', 'sell_price'));
     $query->condition('type', 'product', '=');
@@ -38,6 +39,7 @@ class ProductVariation extends SqlBase {
   public function fields() {
     $fields = [
       'nid' => $this->t('Node ID'),
+      'title' => $this->t('Product title'),
       'model' => $this->t('SKU code'),
       'sell_price' => $this->t('Product price'),
     ];
@@ -50,8 +52,7 @@ class ProductVariation extends SqlBase {
    */
   public function prepareRow(Row $row) {
 
-    // Simply creates a new source row field named 'node_id' with the 'nid'
-    // value.
+    // Creates a new source row field named 'node_id' with the 'nid' value.
     $row->setSourceProperty('node_id', $row->getSourceProperty('nid'));
 
     return parent::prepareRow($row);
