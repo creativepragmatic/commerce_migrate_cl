@@ -88,8 +88,8 @@ The idea is to share my approach and experiences.  Hopefully, others will build 
 
 3. When I ran Migrate Drupal, files with nonsensical names like this also appeared.  I removed those with the following commands:
 
-    DELETE FROM `file_managed` WHERE `uid` != 7
-    DELETE FROM `file_usage` WHERE `type` = 'user'
+    DELETE FROM `file_managed` WHERE `uid` != 7;
+    DELETE FROM `file_usage` WHERE `type` = 'user';
     find . -size 0c -delete
 
 4. For product variations, the title field does not get migrated in. I'm not sure why.
